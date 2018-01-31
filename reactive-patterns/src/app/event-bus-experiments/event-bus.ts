@@ -1,7 +1,10 @@
+
 import * as _ from 'lodash';
 
 export const LESSONS_LIST_AVAILABLE = 'NEW_LIST_AVAILABLE';
+
 export const ADD_NEW_LESSON = 'ADD_NEW_LESSON';
+
 
 export interface Observer {
     notify(data:any);
@@ -14,19 +17,22 @@ interface Subject {
 }
 
 class EventBus implements Subject {
-    private observers: {[key:string]: Observer[]} = {};
+
+    private observers : {[key:string]: Observer[]} = {};
 
     registerObserver(eventType:string, obs: Observer) {
         this.observersPerEventType(eventType).push(obs);
     }
 
     unregisterObserver(eventType:string, obs: Observer) {
-        _.remove(this.observersPerEventType(eventType), el => el === obs);
+        const newObservers = _.remove(
+            this.observersPerEventType(eventType), el => el === obs );
+        this.observers[eventType] = newObservers;
     }
-   
+
     notifyObservers(eventType:string, data: any) {
-        this.observersPerEventType(eventType)                   // loop throught the list of all Observers(observers: {[key:string]: Observer[]}) and return eventtype
-            .forEach(obs => obs.notify(data));                  // and for each of this observers we are going to call notify and pass in data that we recived as argument of method  
+        this.observersPerEventType(eventType)
+            .forEach(obs => obs.notify(data));
     }
 
     private observersPerEventType(eventType:string): Observer[] {
@@ -36,6 +42,19 @@ class EventBus implements Subject {
         }
         return this.observers[eventType];
     }
+
 }
 
+
 export const globalEventBus = new EventBus();
+
+
+
+
+
+
+
+
+
+
+

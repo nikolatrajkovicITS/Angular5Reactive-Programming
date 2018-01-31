@@ -1,28 +1,55 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-browser-event-experiments',
+  selector: 'browser-event-experiments',
   templateUrl: './browser-event-experiments.component.html',
   styleUrls: ['./browser-event-experiments.component.css']
 })
 export class BrowserEventExperimentsComponent implements OnInit {
 
-  hoverSection: HTMLElement;
+    hoverSection: HTMLElement;
+
 
   ngOnInit() {
-    this.hoverSection = document.getElementById('hover');
 
-    this.hoverSection.addEventListener('mousemove', onMouseMove);
+      this.hoverSection = document.getElementById('hover');
+
+      this.hoverSection.addEventListener('mousemove', onMouseMove);
+
+      this.hoverSection.addEventListener('click', onClick);
+
+
   }
 
-  unsubscribe() {
-    console.log('Called unsubscribe()');
+    unsubscribe() {
+      console.log('Called unsubscribe()');
 
-    this.hoverSection.removeEventListener('mousemove', onMouseMove);
-  }
- 
+      this.hoverSection.removeEventListener('mousemove',onMouseMove);
+
+    }
+
 }
+
+function onClick(ev: Event) {
+    console.log("click", ev);
+}
+
 
 function onMouseMove(ev: MouseEvent) {
-    console.log(ev);
+    console.log("mousemove",ev);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
