@@ -1,10 +1,6 @@
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
-
-export const LESSONS_LIST_AVAILABLE = 'NEW_LIST_AVAILABLE';
-
-export const ADD_NEW_LESSON = 'ADD_NEW_LESSON';
-
+import { Lesson } from '../shared/model/lesson';
 
 export interface Observer {
     next(data:any);
@@ -28,6 +24,7 @@ class SubjectImplementation implements Subject {
 
     subscribe(obs: Observer) {
         this.observers.push(obs);
+        obs.next(lessons);
     }
 
     unsubscribe(obs: Observer) {
@@ -36,4 +33,25 @@ class SubjectImplementation implements Subject {
         
 }
 
-export const lessonsList$ = Observable;
+class DataStore {
+
+    private lessons : Lesson[] = [];
+
+    private lessonsListSubject = new SubjectImplementation();
+
+    public lessonsList$: Observable = {
+        subscribe: obs => {
+            this.lessonsListSubject.subscribe(obs);
+            obs.next(this.lessons);
+        },
+    
+        unsubscribe: obs => this.lessonsListSubject.unsubscribe(obs)
+    };
+
+    initializeLessonsList(newList: Lesson[]) {
+        this.lessons = _.cloneDeep(newList);
+        this.lessonsListSubject.next(this.lessons);
+    }
+}
+
+export const store = new DataStore();

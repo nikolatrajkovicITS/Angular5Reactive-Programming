@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Lesson } from "../shared/model/lesson";
 import * as _ from 'lodash';
-import { lessonsList$ } from 'app/event-bus-experiments/app-data';
 import { Observer } from '../event-bus-experiments/app-data';
+import { store } from 'app/event-bus-experiments/app-data';
 
 @Component({
     selector: 'lessons-list',
@@ -18,7 +18,7 @@ export class LessonsListComponent implements Observer, OnInit {
     }
 
     ngOnInit() {
-        lessonsList$.subscribe(this);
+        store.lessonsList$.subscribe(this);
     }
 
     next(data: Lesson[]) {
