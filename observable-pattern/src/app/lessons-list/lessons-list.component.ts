@@ -1,21 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Lesson } from "../shared/model/lesson";
 import * as _ from 'lodash';
-import { Observer } from '../event-bus-experiments/app-data';
-import { store } from 'app/event-bus-experiments/app-data';
+import { Observer } from 'rxjs';
+import { store } from "../event-bus-experiments/app-data";
 
 @Component({
     selector: 'lessons-list',
     templateUrl: './lessons-list.component.html',
     styleUrls: ['./lessons-list.component.css']
 })
-export class LessonsListComponent implements Observer, OnInit {
+export class LessonsListComponent implements Observer<Lesson[]>, OnInit {
 
     lessons: Lesson[] = [];
-
-    constructor() {
-        console.log('lesson list component is registered as observer ..');
-    }
 
     ngOnInit() {
         store.lessonsList$.subscribe(this);
@@ -23,18 +19,27 @@ export class LessonsListComponent implements Observer, OnInit {
 
     next(data: Lesson[]) {
         console.log('Lessons list component received data ..');
-        this.lessons = data.slice(0);
+        this.lessons = data;
     }
+
+    error(err: any) {
+        console.log(err);
+    };
+
+    complete() {
+        console.log('completed');
+    };
 
     toggleLessonViewed(lesson:Lesson) {
         console.log('toggling lesson ...');
-        lesson.completed = !lesson.completed;
+        store.toggleLessonViewed(lesson);
     }
 
     delete(deleted:Lesson) {
-        _.remove(this.lessons,
-            lesson => lesson.id === deleted.id )
+        store.deleteLesson(deleted);
     }
+
+
 
 }
 
