@@ -13,6 +13,7 @@ export class CoursesService {
 
   findAllCourses(): Observable<Course[]> {
     return this.db.list('courses')
+        .first()                     // Called another Observable that recive the first value and then unsubscribe from the original source obsvrable
         .do(console.log);
   }
 
@@ -23,6 +24,7 @@ export class CoursesService {
         limitToLast: 10
       }
     })
+    .first()
     .do(console.log);
   }
 
@@ -32,8 +34,9 @@ export class CoursesService {
           orderByChild: 'url',
           equalTo: courseUrl
       }
-  })
-  .map( data => data[0])
+    })
+    .first()
+    .map( data => data[0]);
   }
 
   findLessonsForCourse(courseId:string): Observable<Lesson[]> {
@@ -42,6 +45,7 @@ export class CoursesService {
           orderByChild: 'courseId',
           equalTo: courseId
       }
-    });
+    })
+    .first();
   }
 }
